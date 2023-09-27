@@ -1,13 +1,16 @@
-import { useEffect } from "react";
-import { Container, Row, Table, Col, Button } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Container, Row, Table, Col, Button, Form, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getJoinedData, getRoleData } from "../slice/CreateSlice";
+import { getJoinedData, getRoleData, updateUser } from "../slice/CreateSlice";
 import { GrEdit } from "react-icons/gr";
 import { MdEmail } from "react-icons/md";
 import { FaUserCheck } from "react-icons/fa";
 import { FaUserSlash } from "react-icons/fa";
 import "./UserList.css";
-const UserList = () => {
+import { Formik, Field, ErrorMessage } from "formik";
+
+import  validationSchema  from './../modal/Modal';
+const UserList = ({handleShow,setIsEdit,isEdit,setUserId}:any) => {
   const dispatch = useDispatch<any>();
 
   useEffect(() => {
@@ -55,7 +58,13 @@ const UserList = () => {
     color: "grey",
   };
 
-
+ 
+  const handleUpdateShow=(user:any)=>{
+    handleShow()
+    setIsEdit(true)
+    setUserId(user.UserId)
+  }
+  
   return (
     <>
       <Container className=" border rounded shadow my-5">
@@ -97,7 +106,7 @@ const UserList = () => {
                       )}
                     </td>
                     <td>
-                      <Button variant="none">
+                      <Button variant="none" onClick={()=>handleUpdateShow(user)}>
                         <GrEdit />
                       </Button>
                     </td>

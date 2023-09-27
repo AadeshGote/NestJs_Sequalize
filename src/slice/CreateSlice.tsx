@@ -37,6 +37,21 @@ export const addUser = createAsyncThunk("/user/add", async (userData: any) => {
   }
 });
 
+export const updateUser = createAsyncThunk(
+  "/user/update",
+  async (userData: any) => {
+    try {
+      const response = await API.put(
+        `/user/update/${userData.id}`,
+        userData
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 const userProfileSlice = createSlice({
   name: "userProfile",
   initialState: {
@@ -56,6 +71,23 @@ const userProfileSlice = createSlice({
         state.joinedUserData = action.payload;
       })
       .addCase(getJoinedData.rejected, (state, action) => {
+        state.loading = false;
+      })
+
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(updateUser.fulfilled, (state:any, action:any) => {
+        state.loading = false;
+      
+        state.joinedUserData.data = state.joinedUserData.map((user:any) =>
+          user.UserId === action.payload.UserId
+            ? { ...user, ...action.payload }
+            : user
+        );
+      })
+      .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
       });
   },

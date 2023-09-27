@@ -1,21 +1,20 @@
-import React from "react";
 import {
   Button,
   Col,
   Container,
   Form,
-  Nav,
-  Navbar,
-  NavDropdown,
-  Row,
+  Row
 } from "react-bootstrap";
-import "./Navbar.css";
 import { BiUserPlus } from "react-icons/bi";
 import { BsFilterLeft } from "react-icons/bs";
 import { FiRefreshCw } from "react-icons/fi";
-import setShow from "../modal/Modal"
+import "./Navbar.css";
 
-const NavBar = ({handleShow}:any) => {
+const NavBar = ({handleShow,setIsEdit}:any) => {
+  const handleRegister=()=>{
+    setIsEdit(false)
+    handleShow()
+  }
   return (
     <>
       <Container fluid className="border text-center p-3" id="container">
@@ -38,7 +37,7 @@ const NavBar = ({handleShow}:any) => {
             <Form.Control type="text" placeholder="Search" id="custom-search" />
           </Col>
           <Col md="2">
-            <Button id="addBtn" className="p-1" onClick={handleShow}>
+            <Button id="addBtn" className="p-1" onClick={handleRegister}>
               <BiUserPlus size={20} /> REGISTER
             </Button>
           </Col>
