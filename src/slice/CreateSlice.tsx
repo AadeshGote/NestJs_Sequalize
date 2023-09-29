@@ -27,9 +27,6 @@ export const getRoleData = createAsyncThunk("/role/get", async () => {
 export const addUser = createAsyncThunk("/user/add", async (userData: any) => {
   try {
     const response = await API.post("/user/add", userData, {
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
     });
     return response.data;
   } catch (error) {
@@ -42,9 +39,31 @@ export const updateUser = createAsyncThunk(
   async (userData: any) => {
     try {
       const response = await API.put(
-        `/user/update/${userData.id}`,
+        `/user/update/${userData.UserId}`,
         userData
       );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+export const disableUser = createAsyncThunk(
+  "user/disable",
+  async (userId: any) => {
+    try {
+      const response = await API.patch(`user/disable/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+export const enableUser = createAsyncThunk(
+  "user/enable",
+  async (userId: any) => {
+    try {
+      const response = await API.patch(`user/enable/${userId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -55,6 +74,7 @@ export const updateUser = createAsyncThunk(
 const userProfileSlice = createSlice({
   name: "userProfile",
   initialState: {
+    add:[],
     joinedUserData: [],
     loading: false,
     error: "",
@@ -74,14 +94,28 @@ const userProfileSlice = createSlice({
         state.loading = false;
       })
 
+
+      .addCase(addUser.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(addUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.add = action.payload;
+      })
+      .addCase(addUser.rejected, (state, action:any) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
         state.error = "";
       })
-      .addCase(updateUser.fulfilled, (state:any, action:any) => {
+      .addCase(updateUser.fulfilled, (state: any, action: any) => {
         state.loading = false;
-      
-        state.joinedUserData.data = state.joinedUserData.map((user:any) =>
+
+        state.joinedUserData.data = state.joinedUserData.map((user: any) =>
           user.UserId === action.payload.UserId
             ? { ...user, ...action.payload }
             : user

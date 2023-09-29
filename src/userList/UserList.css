@@ -1,0 +1,21 @@
+#active {
+  background-color: lightgreen;
+  border-radius: 20px;
+  width: 80px;
+  height: 30px;
+  text-align: center;
+  border: 2px solid green;
+}
+#disable {
+  background-color: orange;
+  border-radius: 20px;
+  width: 80px;
+  height: 30px;
+  text-align: center;
+  border: 2px solid red;
+}
+
+.header{
+  border: 2px solid red;
+
+}

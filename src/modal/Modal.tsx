@@ -1,18 +1,20 @@
 // UserModal.js
 
 import React, { useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { addUser, getRoleData, updateUser } from "../slice/CreateSlice";
+import { addUser, getJoinedData, getRoleData, updateUser } from "../slice/CreateSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserModal = ({ show, handleClose, isEdit, setIsEdit, userId }: any) => {
   const dispatch = useDispatch();
   const { roleData } = useSelector((state: any) => state.roleMaster);
 
   const initialValues = {
-    RoleId: 0, // Default RoleId value, change this to the desired default value
+    RoleId: 0,
     Username: "",
     EmailId: "",
     Gender: "",
@@ -36,11 +38,21 @@ const UserModal = ({ show, handleClose, isEdit, setIsEdit, userId }: any) => {
   const handleSubmit = async (values: any) => {
     try {
       values.RoleId = parseInt(values.RoleId, 10);
-      // console.log("Data being sent from UI:", values); // Add this line
+      const response = await dispatch(addUser(values) as any);
 
-      // Dispatch the addUser action with the form values
-      await dispatch(addUser(values) as any);
-      console.log("Data submitted:", values);
+
+      if (response && response.error) {
+        toast.error("Email Already Exists", {
+          position: "top-right",
+          theme: "colored",
+        });
+      } else {
+        toast.success("User Added Successfully", {
+          position: "top-right",
+          theme: "colored",
+        });
+      }
+     dispatch(getJoinedData() as any)
     } catch (error) {
       console.error("Error submitting data:", error);
     }
@@ -48,9 +60,20 @@ const UserModal = ({ show, handleClose, isEdit, setIsEdit, userId }: any) => {
   const handleUpdate = async (values: any) => {
     try {
       values.RoleId = parseInt(values.RoleId, 10);
+      const updatedUser = {
+        UserId: values.UserId,
+        RoleId: values.RoleId,
+        Username: values.Username,
+        EmailId: values.EmailId,
+        Gender: values.Gender,
+        Age: values.Age,
+        Salary: values.Salary,
+        City: values.City,
+      };
+
       window.location.reload();
-      await dispatch(updateUser({ id: userId, ...values }) as any);
-      console.log("Data submitted:", values);
+      await dispatch(updateUser(updatedUser) as any);
+      console.log("Data submitted:", updatedUser);
     } catch (error) {
       console.error("Error submitting data:", error);
     }
@@ -76,13 +99,14 @@ const UserModal = ({ show, handleClose, isEdit, setIsEdit, userId }: any) => {
         </Modal.Header>
         <Modal.Body>
           <Formik
-            initialValues={initialValues}
+            initialValues={isEdit ? userId : initialValues}
             validationSchema={validationSchema}
             onSubmit={isEdit ? handleUpdate : handleSubmit}
           >
-            <Form>
-              <div>
-                <label htmlFor="RoleId">RoleId:</label>
+            <Form className="d-flex flex-column justify-content-between align-items-start ">
+              <Row>
+               <Col> <label htmlFor="RoleId">RoleId:</label></Col>
+                <Col>
                 <Field as="select" id="RoleId" name="RoleId">
                   <option value={0} disabled>
                     Select Role
@@ -95,21 +119,27 @@ const UserModal = ({ show, handleClose, isEdit, setIsEdit, userId }: any) => {
                     ))}
                 </Field>
                 <ErrorMessage name="RoleId" component="div" />
-              </div>
+                </Col>
+              </Row>
+             
 
-              <div>
-                <label htmlFor="Username">Username:</label>
+              <Row>
+               <Col> <label htmlFor="Username">Username:</label></Col>
+               <Col>
                 <Field type="text" id="Username" name="Username" />
                 <ErrorMessage name="Username" component="div" />
-              </div>
-              <div>
-                <label htmlFor="EmailId">EmailId:</label>
+                </Col>
+              </Row>
+              <Row>
+                <Col><label htmlFor="EmailId">EmailId:</label></Col>
+                <Col>
                 <Field type="text" id="EmailId" name="EmailId" />
                 <ErrorMessage name="EmailId" component="div" />
-              </div>
+                </Col>
+              </Row>
 
-              <div>
-                <label htmlFor="Gender">Gender:</label>
+              <Row>
+                <Col><label htmlFor="Gender">Gender:</label></Col>
                 <div>
                   <label>
                     <Field type="radio" name="Gender" value="Male" /> Male
@@ -122,7 +152,7 @@ const UserModal = ({ show, handleClose, isEdit, setIsEdit, userId }: any) => {
                   </label>
                 </div>
                 <ErrorMessage name="Gender" component="div" />
-              </div>
+              </Row>
 
               <div>
                 <label htmlFor="Age">Age:</label>
@@ -141,14 +171,14 @@ const UserModal = ({ show, handleClose, isEdit, setIsEdit, userId }: any) => {
                 <Field type="text" id="City" name="City" />
                 <ErrorMessage name="City" component="div" />
               </div>
-
+              <hr />
               {isEdit ? (
                 <div>
-                  <Button type="submit">Update</Button>
+                  <Button type="submit" onClick={handleClose}>Update</Button>
                 </div>
               ) : (
                 <div>
-                  <Button type="submit">Submit</Button>
+                  <Button type="submit" onClick={handleClose}>Submit</Button>
                 </div>
               )}
             </Form>

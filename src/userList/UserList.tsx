@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
-import { Container, Row, Table, Col, Button, Form, Modal } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { getJoinedData, getRoleData, updateUser } from "../slice/CreateSlice";
+import { useEffect } from "react";
+import { Button, Container, Form, Table } from "react-bootstrap";
+import { FaUserSlash } from "react-icons/fa";
 import { GrEdit } from "react-icons/gr";
 import { MdEmail } from "react-icons/md";
-import { FaUserCheck } from "react-icons/fa";
-import { FaUserSlash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { disableUser, enableUser, getJoinedData } from "../slice/CreateSlice";
 import "./UserList.css";
-import { Formik, Field, ErrorMessage } from "formik";
 
-import  validationSchema  from './../modal/Modal';
-const UserList = ({handleShow,setIsEdit,isEdit,setUserId}:any) => {
+const UserList = ({ handleShow, setIsEdit, isEdit, setUserId }: any) => {
   const dispatch = useDispatch<any>();
 
   useEffect(() => {
@@ -58,24 +55,29 @@ const UserList = ({handleShow,setIsEdit,isEdit,setUserId}:any) => {
     color: "grey",
   };
 
- 
-  const handleUpdateShow=(user:any)=>{
-    handleShow()
-    setIsEdit(true)
-    setUserId(user.UserId)
-  }
-  
+  const handleUpdateShow = (user: any) => {
+    handleShow();
+    setIsEdit(true);
+    setUserId(user);
+  };
+
+  const handleStatus = (userId: any, IsActive: boolean) => {
+    window.location.reload();
+    IsActive ? dispatch(disableUser(userId)) : dispatch(enableUser(userId));
+  };
+
   return (
     <>
-      <Container className=" border rounded shadow my-5">
+      <Container fluid className=" border rounded shadow my-5">
         <Table>
           <thead>
             <tr>
-              <th>FULL NAME</th>
-              <th>ROLE</th>
+              <th >FULL NAME</th>
+              <th >ROLE</th>
               <th>COMMUNICATION EMAIL</th>
-              <th>STATUS</th>
-              <th>ACTION</th>
+              <th className="px-3">STATUS</th>
+              <th className="px-3">UPDATE</th>
+              <th >ENABLE/DISABLE</th>
             </tr>
           </thead>
           <tbody>
@@ -100,15 +102,32 @@ const UserList = ({handleShow,setIsEdit,isEdit,setUserId}:any) => {
                     </td>
                     <td>
                       {user.IsActive ? (
-                        <div><FaUserCheck size={30}/></div>
+                        <div id="active">Active</div>
                       ) : (
-                        <div><FaUserSlash size={30}/></div>
+                        <div id="disable">Disabled</div>
                       )}
                     </td>
                     <td>
-                      <Button variant="none" onClick={()=>handleUpdateShow(user)}>
-                        <GrEdit />
-                      </Button>
+                      <span>
+                        <Button
+                          variant="none"
+                          onClick={() => handleUpdateShow(user)}
+                        >
+                          <GrEdit />
+                        </Button>
+                      </span>
+                      </td>
+                      <td>
+                      <span>
+                        <Form.Check
+                          type="switch"
+                          id="custom-switch"
+                          checked={user.IsActive ? true : false}
+                          onChange={() => {
+                            handleStatus(user.UserId, user.IsActive);
+                          }}
+                        />
+                      </span>
                     </td>
                   </tr>
                 </>
