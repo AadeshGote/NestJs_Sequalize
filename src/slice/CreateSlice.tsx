@@ -74,7 +74,6 @@ export const enableUser = createAsyncThunk(
 const userProfileSlice = createSlice({
   name: "userProfile",
   initialState: {
-    add:[],
     joinedUserData: [],
     loading: false,
     error: "",
@@ -101,11 +100,11 @@ const userProfileSlice = createSlice({
       })
       .addCase(addUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.add = action.payload;
+        state.joinedUserData = action.payload.data;
       })
       .addCase(addUser.rejected, (state, action:any) => {
         state.loading = false;
-        state.error = action.payload;
+        state.joinedUserData = action.payload;
       })
 
       .addCase(updateUser.pending, (state) => {
@@ -115,7 +114,7 @@ const userProfileSlice = createSlice({
       .addCase(updateUser.fulfilled, (state: any, action: any) => {
         state.loading = false;
 
-        state.joinedUserData.data = state.joinedUserData.map((user: any) =>
+        state.joinedUserData.data = state.joinedUserData.data.map((user: any) =>
           user.UserId === action.payload.UserId
             ? { ...user, ...action.payload }
             : user

@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer } from "react-bootstrap";
 import { Provider } from "react-redux";
 import Store from "./store/Store";
-import "./userList/UserList.css"
+import "./components/userList/UserList.css"
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

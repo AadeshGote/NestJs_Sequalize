@@ -19,3 +19,9 @@
   border: 2px solid red;
 
 }
+#custom-switch{
+  width: 35%;
+  height: 30px;
+  box-shadow: 3px 3px 10px 0px black;
+  
+}

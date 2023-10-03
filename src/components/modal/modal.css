@@ -1,0 +1,72 @@
+/* UserModal.css */
+
+/* Style the modal container */
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style the modal header */
+  .modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  /* Style the modal title */
+  .modal-title {
+    font-size: 1.5rem;
+  }
+  
+  /* Style the modal body */
+  .formBody {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  /* Style form input fields */
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 80%;
+    padding: 5px;
+    margin: 5px 0;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  /* Style radio buttons */
+  input[type="radio"] {
+    margin-right: 8px;
+  }
+
+  
+  /* Style error messages */
+  div.error {
+    color: #ff0000;
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+  
+  /* Style the radio button container div */
+  div.radio-container {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Style the horizontal line */
+  hr {
+    width: 100%;
+  }
+
+
+  
+
+
+  
